@@ -7,7 +7,7 @@ PORT ( clk     : IN std_logic;
        address : IN std_logic_vector(31 DOWNTO 0);
        datain  : IN std_logic_vector(31 DOWNTO 0);
        dataout : OUT std_logic_vector(31 DOWNTO 0) );
-END ENTITY ram;
+END ENTITY Ram;
 
 ARCHITECTURE ram1 OF Ram IS 
  TYPE ram_type IS ARRAY(0 TO 1048575) of std_logic_vector(15 DOWNTO 0);
