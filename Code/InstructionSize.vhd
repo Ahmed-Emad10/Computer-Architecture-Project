@@ -11,7 +11,7 @@ ARCHITECTURE instructionsize1 OF instructionsize IS
 
 BEGIN
 
-	size<= '0' when opcode="00000"
+	size<= '0' when opcode="00000"    -- Zero means add one
 	  else '0' when opcode="00001"
 	  else '0' when opcode="00010"
 	  else '0' when opcode="00011"
