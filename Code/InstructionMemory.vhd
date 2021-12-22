@@ -15,19 +15,19 @@ ARCHITECTURE myInstructionMemory OF InstructionMemory IS
 
 COMPONENT instructionsize IS                
 PORT (	opcode : in std_logic_vector (4 downto 0);
-	size   : out std_logic );
+	size   : out std_logic_vector(1 downto 0) );
 END COMPONENT;
 
- signal size1: std_logic;
+ signal size1: std_logic_vector(1 downto 0);
 BEGIN
   IS1:instructionsize port map(datain(31 downto 27),size1);
 
 PROCESS(clk) IS 
   BEGIN
  	IF rising_edge(clk) THEN 
- 		IF we = '1' and size1='0' THEN 
+ 		IF we = '1' and (size1="00" or size1="10") THEN 
 			ram(to_integer(unsigned((address)))) <= datain(31 downto 16); 
-		ELSIF we = '1' and size1='1' THEN 
+		ELSIF we = '1' and size1="01" THEN 
 			ram(to_integer(unsigned((address)))) <= datain(31 downto 16); 
 			ram(to_integer(unsigned((address)))+1) <= datain(15 downto 0); 
  		END IF;

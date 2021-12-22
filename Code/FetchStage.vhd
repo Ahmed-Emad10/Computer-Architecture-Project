@@ -46,7 +46,7 @@ end component;
 
 component instructionsize IS
 PORT ( opcode : in std_logic_vector(4 downto 0);
-       size   : out std_logic );
+       size   : out std_logic_vector(1 downto 0) );
 END component;
 
 component mux2x1 IS 
@@ -56,8 +56,16 @@ component mux2x1 IS
 		out1    : OUT std_logic_vector (n-1 DOWNTO 0));
 END component;
 
+component mux IS 
+	Generic ( n : Integer:=32);
+	PORT ( in0,in1,in2,in3 : IN std_logic_vector (n-1 DOWNTO 0);
+			sel : IN  std_logic_vector (1 DOWNTO 0);
+			out1 : OUT std_logic_vector (n-1 DOWNTO 0));
+END component;
+
 SIGNAL pc_out,inst_out,faddress,sum1,sum2,new_pc,add1,add2 : std_logic_vector(31 downto 0);  --address signal the chosen address between PC(pc_out) and Address(to store instructions in instruction memory)
-SIGNAL cout1,cout2,inst_size : std_logic;
+SIGNAL cout1,cout2 : std_logic;
+SIGNAL inst_size : std_logic_vector(1 downto 0); 
 begin
 
 	PC_comp: PC port map(en(2),clk,rst(2),new_pc,pc_out);
@@ -72,7 +80,7 @@ begin
 
 	Mux1: mux2x1 port map(pc_out,Address,en(1),faddress);   --to choose which address for filling the instruction memory or choosing  which instruction to be executed (if en(1) is equal to zero we take PC as address)
 	
-	Mux2: mux2x1 port map(sum1,sum2,inst_size,new_pc);        --to choose what to add to the PC 1 or 2
+	Mux2: mux port map(sum1,sum2,pc_out,(Others => '0'),inst_size,new_pc);        --to choose what to add to the PC 1 or 2 or same pc in case of hlt
 
 	fBuffer: FetchBuffer port map(en(0),clk,rst(0),inst_out,pc_out,InstrucionOut,PCOut);
 
