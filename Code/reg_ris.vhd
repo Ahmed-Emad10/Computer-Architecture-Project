@@ -1,13 +1,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity reg16 is
+entity reg_ris is
+generic(n: integer:=16);
 port(clk,en: in std_logic;
-	d: in std_logic_vector(15 downto 0);
-	q: out std_logic_vector(15 downto 0));
-end reg16;
+	d: in std_logic_vector(n-1 downto 0);
+	q: out std_logic_vector(n-1 downto 0));
+end reg_ris;
 
-architecture reg16 of reg16 is
+architecture reg_ris of reg_ris is
 begin
 process(clk)
 begin
@@ -17,4 +18,4 @@ if rising_edge(clk) then
 	end if;
 end if;
 end process;
-end reg16;
+end reg_ris;
