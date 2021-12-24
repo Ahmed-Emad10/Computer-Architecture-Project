@@ -44,7 +44,6 @@ pcout <= pcin;
 cu1: contUnit port map(inst(31 downto 27),temp,regDes,jmp,outPort,alusrc,aluop,memwrite,memread,pop,push,ret,int,instsize);
 wbreg <= temp(0) or temp(1);
 wb<=temp;
-aluOp<=inst(31 downto 27);
 rf1: regFile port map(wbreg,clk,rst,inst(26 downto 24),inst(23 downto 21),wr,wd,rd1,rd2);
 index<=inst(26 downto 25);
 operand1<=inst(26 downto 24);

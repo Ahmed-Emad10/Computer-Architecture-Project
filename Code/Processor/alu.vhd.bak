@@ -73,10 +73,6 @@ else z8 when op="01001" or op="010100"
 else z9 when op="01010"
 else z10 when op="01011"
 else '0';
-n10<='1' when f10<zero
-else '0';
-z10<='1' when f10=zero
-else '0';
 n9<='1' when f9<zero
 else '0';
 z9<='1' when f9=zero
