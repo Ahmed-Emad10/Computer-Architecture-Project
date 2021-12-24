@@ -18,10 +18,10 @@ architecture writeback of writeback is
 begin
   process(clk)
     begin
-    if(falling_edge(clk)) then
+    if(rising_edge(clk)) then
     case (wb) is
- when "01"=>aluout <= mem
- when "10"=>aluout <= alu
+ when "01"=>aluout <= mem;
+ when "10"=>aluout <= alu;
  when others=>aluout <= inport;
   end case;
 wr <= regdes;
