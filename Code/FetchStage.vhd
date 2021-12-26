@@ -5,7 +5,7 @@ entity FetchStage is
 port(
      en  :in std_logic_vector(2 downto 0);         --en(2)-->for pc, en(1)-->for instruction memory, en(0)-->for fetch buffer
      clk :in std_logic;
-     rst :std_logic_vector(2 downto 0); -- rst(2)-->for pc, rst(1)-->for instruction memory, rst(0)-->for fetch buffer
+     rst :in std_logic_vector(2 downto 0); -- rst(2)-->for pc, rst(1)-->for instruction memory, rst(0)-->for fetch buffer
      Address:in std_logic_vector (31 downto 0); --to choose the location to store the instruction in the instruction memory
      instMemData:in std_logic_vector (31 downto 0);  --data in for instruction memory which represents the instruction itself (all instructions are 32-bit until i decide which one is 16 only) 
      PCOut,InstrucionOut: out std_logic_vector (31 downto 0)

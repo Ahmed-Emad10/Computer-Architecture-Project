@@ -11,17 +11,17 @@ entity cpu is
 end entity;
 architecture cpu of cpu is
 component exStage is
-  port(
-    clk:in std_logic;
+    port(
+    clk,rst:in std_logic;
     jmpFlag,outportFlag,aluSrc,exInt:in std_logic;
-    aluOp:in std_logic_vector(4 downto 0);
+    op:in std_logic_vector(4 downto 0);
     epc:in std_logic_vector(31 downto 0);
-    imm,r1,r2,aluout,memout,inport:in std_logic_vector(15 downto 0);
+    imm,sr1,sr2,aluo,memout,inport:in std_logic_vector(15 downto 0);
     op1,op2,op3:in std_logic_vector(2 downto 0);
-    inportSignal,regDest:in std_logic_vector(1 downto 0);
+    inportSig,regDst:in std_logic_vector(1 downto 0);
     alures:out std_logic_vector(15 downto 0);
     ccr:out std_logic_vector(2 downto 0);
-rdst:out std_logic_vector(2 downto 0)
+    rdst:out std_logic_vector(2 downto 0)
      );
 end component;
 component FetchStage is
@@ -76,16 +76,16 @@ port(clk,rst: in std_logic;
 	RD1,RD2: out std_logic_vector(15 downto 0)
 );
 end component;
-signal jmp,outPort,AluSrc,memWrite,memRead,pop,push,ret,int,instSize,exInt,en1,rst1,rstm: std_logic;
+signal jmp,outPort,AluSrc,memWrite,memRead,pop,push,ret,int,instSize,exInt,en1,rst1,rstm,rstex: std_logic;
 signal wb,inportSignal,regDest,index,WB_CS,WB_CSout: std_logic_vector(1 downto 0); 
 signal wr,op1,op2,op3,ccr ,rdst, regDestOut : std_logic_vector(2 downto 0);
 signal aluOp: std_logic_vector(4 downto 0);---<<<<---------Conflict
 signal pc,pcout,inst,epc: std_logic_vector (31 downto 0);
-signal wd,imm,r1,r2,result,alures,memout,inport,aluout,writeData:std_logic_vector(15 downto 0);
+signal imm,r1,r2,result,alures,memout,inport,aluout,inportout:std_logic_vector(15 downto 0);
 begin
 ftch:FetchStage port map(en,clk,rst,Address,instMemData,pc,inst);
 dec :decode     port map(clk,rstm,pc,inst,wr,result,wb,regDest,jmp,outPort,AluSrc,aluOp,memWrite,memRead,pop,push,ret,int,instSize,imm,index,op1,op2,op3,pcout,r1,r2);
 ex  :exStage    port map(clk,jmp,outport,aluSrc,exInt,aluOp,epc,imm,r1,r2,aluout,memout,inport,op1,op2,op3,inportSignal,regDest,alures,ccr,rdst);
-mem :memStage   port map(rdst,clk,memRead,memWrite,en1,rst1,WB_CS ,alures,inPort,alures,regDestOut,WB_CSOut,inPort,MemOut,ALUOut);
-wrb :writeBack  port map(wb,memout,alures,inport,rdst,result,WR);
+mem :memStage   port map(rdst,clk,memRead,memWrite,en1,rst1,WB_CS ,alures,inPort,alures,regDestOut,WB_CSOut,inPortout,MemOut,ALUOut);
+wrb :writeBack  port map(clk,wb,memout,alures,inport,rdst,result,WR);
 end architecture;
