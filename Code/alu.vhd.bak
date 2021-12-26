@@ -73,9 +73,9 @@ end if;
 --else '0';
 case(op) is
 when "00000"=>res<=zero;
-when "00011"=>res<= f4;
-when "00100"=>res<=f5;
-when "00101"=>res<=f6;
+when "00100"=>res<= f4;
+when "00101"=>res<=f5;
+when "00110"=>res<=f6;
 when others=>res<=zero;
 end case;
 --else f7 when op="01000"
