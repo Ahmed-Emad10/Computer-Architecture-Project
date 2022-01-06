@@ -20,7 +20,7 @@ component alu is
    GENERIC(n : integer :=16);
       port(
       clk,rst:in std_logic;
-    op:in std_logic_vector(4 downto 0);
+    op:in std_logic_vector(4 downto 0); 
     r1:in std_logic_vector(n-1 downto 0);
     r2:in std_logic_vector(n-1 downto 0);
     res:out std_logic_vector(n-1 downto 0);

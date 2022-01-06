@@ -16,7 +16,7 @@ with Sel select
 	out1 <= in0 when "00",
 		in1 when "01",
 		in2 when "10",
-		in3 when others;
+		in3 when others; 
 END mux;
 
  --SIGNAL bus : bit_vector(0 TO 7) := (4=>'1', OTHERS=>'0');  -- default value 

@@ -15,7 +15,7 @@ wb: in std_logic_vector(1 downto 0);
 end entity;
 
 architecture writeback of writeback is
-  signal m,a,inp:std_logic_vector(15 downto 0);
+  signal m,a,inp:std_logic_vector(15 downto 0); 
   signal w:std_logic_vector(1 downto 0);
   signal rd:std_logic_vector(2 downto 0);
 begin

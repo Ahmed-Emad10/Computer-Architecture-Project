@@ -16,7 +16,7 @@ component exStage is
     jmpFlag,outportFlag,aluSrc,exInt:in std_logic;
     op:in std_logic_vector(4 downto 0);
     epc:in std_logic_vector(31 downto 0);
-    imm,sr1,sr2,aluo,memout,inport:in std_logic_vector(15 downto 0);
+    imm,sr1,sr2,aluo,memout,inport:in std_logic_vector(15 downto 0); 
     op1,op2,op3:in std_logic_vector(2 downto 0);
     inportSig,regDst:in std_logic_vector(1 downto 0);
     alures:out std_logic_vector(15 downto 0);

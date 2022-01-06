@@ -16,7 +16,7 @@ generic(n:integer :=32);
 port(
      en,clk,rst:in std_logic;
      d:in std_logic_vector (n-1 downto 0);
-     q: out std_logic_vector (n-1 downto 0)
+     q: out std_logic_vector (n-1 downto 0) 
      );
 end component;
 begin

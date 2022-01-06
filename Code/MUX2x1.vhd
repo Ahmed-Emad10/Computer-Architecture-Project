@@ -15,5 +15,5 @@ ARCHITECTURE mymux2x1 OF mux2x1 is
 		
 with Sel select
 	out1 <= in0 when '0',
-		in1 when others;
+		in1 when others; 
 END mymux2x1;

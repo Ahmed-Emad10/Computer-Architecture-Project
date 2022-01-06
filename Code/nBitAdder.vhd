@@ -17,7 +17,7 @@ COMPONENT oneBitAdder IS
 PORT( a,b,cin : IN std_logic; 
       s,cout  : OUT std_logic);
 END COMPONENT;
-SIGNAL temp : std_logic_vector(n DOWNTO 0);
+SIGNAL temp : std_logic_vector(n DOWNTO 0); 
 BEGIN
 	temp(0) <= cin;
 	loop1: FOR i IN 0 TO n-1 GENERATE

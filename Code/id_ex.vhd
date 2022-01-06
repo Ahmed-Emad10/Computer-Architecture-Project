@@ -20,7 +20,7 @@ port(stall: in std_logic; 			--for stalling
 	regDes: out std_logic_vector(1 downto 0);
 	jmp,outPort,AluSrc: out std_logic_vector(0 downto 0);
 	aluOp: out std_logic_vector(4 downto 0);
-	memWrite,memRead,pop,push,ret,int,instSize: out std_logic_vector(0 downto 0);
+	memWrite,memRead,pop,push,ret,int,instSize: out std_logic_vector(0 downto 0); 
 	imm: out std_logic_vector(15 downto 0);
 	index: out std_logic_vector(1 downto 0); 
 	operand1,operand2,operand3: out std_logic_vector(2 downto 0);
