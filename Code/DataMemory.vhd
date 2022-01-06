@@ -19,7 +19,7 @@ PROCESS(clk) IS
   BEGIN
  	IF falling_edge(clk) THEN 
  		IF memWrite = '1'  THEN 
-			ram(to_integer(unsigned((address)))) <= writeData; 
+			ram(to_integer(unsigned((address)))) <= writeData;  
  		END IF;
 	END IF;
   END PROCESS;

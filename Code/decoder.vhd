@@ -13,5 +13,5 @@ a<=(others=>'0') when en='0'
 else "0001" when s="00"
 else "0010" when s="01"
 else "0100" when s="10"
-else "1000" when s="11";
+else "1000" when s="11"; 
 end architecture;

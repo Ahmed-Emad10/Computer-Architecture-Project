@@ -20,7 +20,7 @@ END COMPONENT;
 
  signal size1: std_logic_vector(1 downto 0);
 BEGIN
-  IS1:instructionsize port map(datain(31 downto 27),size1);
+  IS1:instructionsize port map(datain(31 downto 27),size1); 
 
 PROCESS(clk) IS 
   BEGIN

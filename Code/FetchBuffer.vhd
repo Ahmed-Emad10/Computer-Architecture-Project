@@ -21,6 +21,6 @@ port(
 end component;
 begin
 PCBuffer: reg  port map(en , clk , rst , PC, PCOut);
-InstructionBufffer: reg  port map(en , clk , rst , Instruction, InstOut);
+InstructionBufffer: reg  port map(en , clk , rst , Instruction, InstOut); 
 end architecture;
 

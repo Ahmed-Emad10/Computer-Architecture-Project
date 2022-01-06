@@ -11,5 +11,5 @@ END oneBitAdder;
 ARCHITECTURE oneBitArch OF oneBitAdder IS
 BEGIN
 	s <= a XOR b XOR cin;
-	cout <= (a AND b) or (cin AND (a XOR b));
+	cout <= (a AND b) or (cin AND (a XOR b)); 
 END oneBitArch; 

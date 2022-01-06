@@ -12,7 +12,7 @@ port(rst: in std_logic;
 	jmp,outPort,AluSrc: out std_logic;
 	aluOp: out std_logic_vector(4 downto 0);--not sure yet...
 	--mem
-	memWrite,memRead,pop,push,ret,int,instSize: out std_logic
+	memWrite,memRead,pop,push,ret,int,instSize: out std_logic 
 	);
 end entity;
 

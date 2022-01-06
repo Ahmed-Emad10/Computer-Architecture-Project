@@ -12,6 +12,6 @@ architecture tsb of tsb is
 begin
 outp<=inp when en='1'
 else (others=>'Z');
-
+ 
 
 end architecture;

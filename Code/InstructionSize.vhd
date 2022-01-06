@@ -18,6 +18,6 @@ BEGIN
 	  else "00" when opcode="00100"
 	  else "00" when opcode="00101"
 	  else "00" when opcode="00110"
-	  else "00" when opcode="00111";
+	  else "00" when opcode="00111"; 
 
 END instructionsize1;

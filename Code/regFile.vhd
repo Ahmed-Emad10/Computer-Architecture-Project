@@ -18,7 +18,7 @@ end component;
 component Decoder8 is
 port(	WB: in std_logic;
 	WR: in std_logic_vector(2 downto 0);
-	output: out std_logic_vector(7 downto 0));
+	output: out std_logic_vector(7 downto 0)); 
 end component;
 signal q0,q1,q2,q3,q4,q5,q6,q7: std_logic_vector(15 downto 0);
 signal en1: std_logic_vector(7 downto 0);

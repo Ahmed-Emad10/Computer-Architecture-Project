@@ -16,6 +16,6 @@ output <= "00000000" when WB='0'
 	else "00001000" when WR="011"
 	else "00010000" when WR="100"
 	else "00100000" when WR="101"
-	else "01000000" when WR="110"
+	else "01000000" when WR="110" 
 	else "10000000";
 end dd;

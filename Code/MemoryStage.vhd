@@ -20,7 +20,7 @@ component DataMemory is
 PORT ( clk     : IN std_logic;
        memRead,memWrite      : IN std_logic;    	--Read for load(get data ffrom memory) , Write for store(insert data in memory)
        address : IN std_logic_vector(15 DOWNTO 0);
-       writeData  : IN std_logic_vector(15 DOWNTO 0);  
+       writeData  : IN std_logic_vector(15 DOWNTO 0);   
        readData : OUT std_logic_vector(15 DOWNTO 0) ); 
 end component;
 

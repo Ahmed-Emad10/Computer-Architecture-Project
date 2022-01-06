@@ -16,7 +16,7 @@ port(clk,rst: in std_logic;
 	index: out std_logic_vector(1 downto 0); --why is it 2 bits not just 1?
 	operand1,operand2,operand3: out std_logic_vector(2 downto 0);
 	pcout: out std_logic_vector(31 downto 0);
-	RD1,RD2: out std_logic_vector(15 downto 0)
+	RD1,RD2: out std_logic_vector(15 downto 0) 
 );
 end entity;
 
