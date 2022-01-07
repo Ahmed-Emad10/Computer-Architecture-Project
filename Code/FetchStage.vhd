@@ -4,8 +4,8 @@ use ieee.std_logic_1164.all;
 entity FetchStage is
 port(
      en  :in std_logic_vector(2 downto 0);        		 			--en(2)-->for pc, en(1)-->for instruction memory, en(0)-->for fetch buffer
-     clk,IF_IDWrite,IF_Flush,JMP_Flush,INT_Flush,RET_Flush,Reset_Flush,Pop_Flush :in std_logic;        --IF_IDWrite for stall, others for flush
-
+     clk,IF_IDWrite,PCWrite :in std_logic;        --IF_IDWrite for stall also PCWrite
+     IF_Flush,JMP_Flush,INT_Flush,RET_Flush,Reset_Flush,Pop_Flush : std_logic;
      rst :in std_logic_vector(2 downto 0); 						-- rst(2)-->for pc, rst(1)-->for instruction memory, rst(0)-->for fetch buffer
      Address:in std_logic_vector (31 downto 0); 					--to choose the location to store the instruction in the instruction memory
      instMemData:in std_logic_vector (31 downto 0);  					--data in for instruction memory which represents the instruction itself 
@@ -17,7 +17,7 @@ end entity;
 architecture myFetchStage of FetchStage is
 component PC is
 port(
-     en,clk,rst:in std_logic;
+     en,clk,rst,PCWrite:in std_logic;
      d:in std_logic_vector (31 downto 0);
      q: out std_logic_vector (31 downto 0)
      );
@@ -70,7 +70,7 @@ SIGNAL cout1,cout2,isFlush : std_logic;
 SIGNAL inst_size : std_logic_vector(1 downto 0); 
 begin
 
-	PC_comp: PC port map(en(2),clk,rst(2),new_pc,pc_out);
+	PC_comp: PC port map(en(2),clk,rst(2),PCWrite,new_pc,pc_out);
 
 	IM: InstructionMemory port map(clk,en(1),faddress,instMemData,inst_out);
 	add1<= "00000000000000000000000000000001";
