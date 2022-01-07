@@ -18,7 +18,7 @@ port(
 end entity;
 
 architecture myFetchStage of FetchStage is
-component PC is
+component PC is 
 port(
      en,clk,rst,PCWrite:in std_logic;
      d:in std_logic_vector (31 downto 0);
