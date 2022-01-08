@@ -6,13 +6,14 @@ entity MemStage is
 port(
      regDest,Flags  :in std_logic_vector(2 downto 0);   --destination of the register
      clk,memRead,memWrite,en,rst,Push,Pop,ThTwSixTeen,INT,call :in std_logic;   --en for the buffer also the rst signal
-     WB_CS :std_logic_vector(1 downto 0); 
+     WB_CS :in std_logic_vector(1 downto 0); 
      PC , memPC : in std_logic_vector (31 downto 0);    -- PC to store in the mem in case of call and INT, memPC is the address of the Reset ,Exc and INT in the instruction memory
      Address,inPort,PopExcAdd,PCExcAdd,startAdd,writeData :in std_logic_vector (15 downto 0);  -- Address and alu out in the same time, startadd the address of reset ,Exc and INT in data mem not in InstructionMem
      PopExc,PCExc,Start,Reset : in std_logic;               -- signals to decide if there is exception , start to start initializing the data mem with the address of Reset,Exceptions and interrupts
      regDestOut  :out std_logic_vector(2 downto 0); 
      WB_CSOut,SPstatus :out std_logic_vector(1 downto 0); 
-     inPortOut,MemOut,ALUOut:out std_logic_vector (15 downto 0)  --output from memory and output from alu 
+     inPortOut,MemOut,ALUOut:out std_logic_vector (15 downto 0);  --output from memory and output from alu
+     PCfMEM : out std_logic_vector(31 downto 0)          -- PC from Memory
      );
 end entity;
 
@@ -70,6 +71,7 @@ begin
 	Mux6: mux2x1 port map(Mux5_Out,memPC,Start,Mux6_Out);
 
 	DM: DataMemory port map(clk,memRead,memWrite,Push,Pop,ThTwSixTeen,Mux4_Out,Mux6_Out,SPstatus,ReadData);
+     PCfMEM <= ReadData;
 	firstBits <= ReadData(15 downto 0);
 	mBuffer: MemBuffer port map(en,clk,rst,firstBits,Address,inPort,WB_CS,regDest,MemOut,ALUOut,inPortOut,WB_CSOut,regDestOut);
 
