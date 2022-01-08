@@ -22,7 +22,7 @@ PROCESS(clk) IS
   Variable SP : std_logic_vector(31 downto 0) :="00000000000011111111111111111111";  
   BEGIN
   IF falling_edge(clk) THEN 
-  
+
     IF memWrite = '1' and ThTwSixTeen = '0' and Push = '0'  THEN 
        ram(to_integer(unsigned((address)))) <= writeData(15 downto 0);  
     END IF;
@@ -59,7 +59,7 @@ PROCESS(clk) IS
       readData <= ram(to_integer(unsigned((address)))+1)&ram(to_integer(unsigned((address)))) ;
     END IF;
 
-    IF SP = "00000000000011111111111111111111" THEN 
+    IF SP = "00000000000011111111111111111111" THEN
       SPstatus <= "00";
     END IF;
     IF SP = "00000000000011111111111111111110" THEN 
