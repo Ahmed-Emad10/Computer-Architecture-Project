@@ -22,6 +22,7 @@ PROCESS(clk) IS
   Variable SP : std_logic_vector(31 downto 0) :="00000000000011111111111111111111";  
   BEGIN
   IF falling_edge(clk) THEN 
+  
     IF memWrite = '1' and ThTwSixTeen = '0' and Push = '0'  THEN 
        ram(to_integer(unsigned((address)))) <= writeData(15 downto 0);  
     END IF;
@@ -29,6 +30,7 @@ PROCESS(clk) IS
       ram(to_integer(unsigned((address)))) <= writeData(15 downto 0); 
       ram(to_integer(unsigned((address)))+1) <= writeData(31 downto 16);  
     END IF;
+
     IF ThTwSixTeen = '0' and Push = '1'  THEN 
       ram(to_integer(unsigned((SP)))) <= writeData(15 downto 0); 
       SP:= std_logic_vector(to_unsigned((to_integer(unsigned(SP))-1),32)); 
@@ -38,6 +40,7 @@ PROCESS(clk) IS
       ram(to_integer(unsigned(SP))-1) <= writeData(15 downto 0);  
       SP:= std_logic_vector(to_unsigned((to_integer(unsigned(SP))-1),32));
     END IF;
+
     IF ThTwSixTeen = '0' and Pop= '1' THEN 
       readData <= (others=>'0');
       readData(15 downto 0) <= ram(to_integer(unsigned((SP)))) ;
@@ -46,8 +49,16 @@ PROCESS(clk) IS
     IF ThTwSixTeen = '1' and Pop= '1' THEN 
       readData(15 downto 0) <= ram(to_integer(unsigned((SP)))) ;
       readData(31 downto 16) <= ram(to_integer(unsigned(SP))+1) ;
-      SP:= std_logic_vector(to_unsigned((to_integer(unsigned(SP))+1),32));
+     SP:= std_logic_vector(to_unsigned((to_integer(unsigned(SP))+1),32));
     END IF;
+
+    IF memRead ='1' and ThTwSixTeen = '0' and Pop= '0' THEN 
+      readData <= "0000000000000000"&ram(to_integer(unsigned((address))));
+    END IF;
+    IF memRead ='1' and ThTwSixTeen = '1' and Pop= '0' THEN 
+      readData <= ram(to_integer(unsigned((address)))+1)&ram(to_integer(unsigned((address)))) ;
+    END IF;
+
     IF SP = "00000000000011111111111111111111" THEN 
       SPstatus <= "00";
     END IF;
@@ -63,10 +74,9 @@ PROCESS(clk) IS
 	
   END IF;
   END PROCESS;
-  --readData <= (others=>'0');
-  PC(31 downto 16) <= ram(to_integer(unsigned((address)))+1);
-  PC(15 downto 0) <= ram(to_integer(unsigned((address))));
-  readData <= "0000000000000000"&ram(to_integer(unsigned((address)))) When memRead = '1' and ThTwSixTeen = '0' and Pop='0'
-         else ram(to_integer(unsigned((address)))+1)&ram(to_integer(unsigned((address)))) When memRead = '1' and ThTwSixTeen = '1' and Pop='0';
+
+  --readData <= "0000000000000000"&ram(to_integer(unsigned((address)))) When (ThTwSixTeen = '0' and Pop='0')
+        -- else ram(to_integer(unsigned((address)))+1)&ram(to_integer(unsigned((address)))) When (ThTwSixTeen = '1' and Pop='0');
+
 
 END architecture;
