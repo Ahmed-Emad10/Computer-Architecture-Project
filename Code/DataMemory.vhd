@@ -5,10 +5,10 @@ ENTITY DataMemory IS
 PORT (clk     : IN std_logic;
       memRead,memWrite,Pop,Push,ThTwSixTeen  : IN std_logic;    -- Read for load(get data from memory) , Write for store(insert data in memory)
                                                                 -- ThirtyTwo/Sixteen signal to decide how many locations in the memory should the data take
-                                                                -- 0 means 16-bit 1 means 32-bit 
-      SPstatus : out std_logic_vector (1 downto 0);  -- '00' empty, '01' one location occupied , '10' two , '11' more than two  
+                                                                -- 0 means 16-bit 1 means 32-bit  
       address : IN std_logic_vector(15 DOWNTO 0);
       writeData  : IN std_logic_vector(31 DOWNTO 0);   --inserted data
+      SPstatus : out std_logic_vector (1 downto 0);  -- '00' empty, '01' one location occupied , '10' two , '11' more than two 
       readData : OUT std_logic_vector(31 DOWNTO 0) );   -- retrieved data
 END ENTITY;
 
