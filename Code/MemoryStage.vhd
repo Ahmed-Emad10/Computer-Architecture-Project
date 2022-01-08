@@ -20,8 +20,8 @@ component DataMemory is
 PORT ( clk     : IN std_logic;
        memRead,memWrite      : IN std_logic;    	--Read for load(get data ffrom memory) , Write for store(insert data in memory)
        address : IN std_logic_vector(15 DOWNTO 0);
-       writeData  : IN std_logic_vector(15 DOWNTO 0);   
-       readData : OUT std_logic_vector(15 DOWNTO 0) ); 
+       writeData  : IN std_logic_vector(31 DOWNTO 0);   
+       readData : OUT std_logic_vector(31 DOWNTO 0) ); 
 end component;
 
 component MemBuffer is
@@ -36,12 +36,13 @@ port(
      );
 end component;
  
-SIGNAl ReadData : std_logic_vector(15 downto 0);
+SIGNAl ReadData : std_logic_vector(31 downto 0);
+Signal firstBits : std_logic_vector (15 downto 0);
 
 begin
 
 	DM: DataMemory port map(clk,memRead,memWrite,Address,writeData,ReadData);
-	
-	mBuffer: MemBuffer port map(en,clk,rst,ReadData,Address,inPort,WB_CS,regDest,MemOut,ALUOut,inPortOut,WB_CSOut,regDestOut);
+	firstBits <= ReadData(31 downto 0);
+	mBuffer: MemBuffer port map(en,clk,rst,firstBits,Address,inPort,WB_CS,regDest,MemOut,ALUOut,inPortOut,WB_CSOut,regDestOut);
 
 end architecture;
