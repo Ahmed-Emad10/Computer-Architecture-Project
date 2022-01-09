@@ -39,7 +39,7 @@ port(
     JMPLocation : in std_logic_vector (15 downto 0);    -- new signals represents the jmp location
     MemOut : in std_logic_vector (31 downto 0);         -- new signals represent the pc of the int or the exceptions
     Reset,PopEx,MemRet,MemInt,MemRti : in std_logic;    -- new signals to choosde the pc in case of we want the pc from the data Mem
-    JMP_Flush,INT_Flush,RET_Flush,Reset_Flush,Pop_Flush,PC_Flush : in std_logic;  -- new signals to flush the Fetch Buffer
+    JMP_Flush,Pop_Flush,PC_Flush : in std_logic;  -- new signals to flush the Fetch Buffer
     rst : in std_logic_vector(2 downto 0); 						-- rst(2)-->for pc, rst(1)-->for instruction memory, rst(0)-->for fetch buffer
     Address : in std_logic_vector (31 downto 0); 				-- to choose the location to store the instruction in the instruction memory
     instMemData : in std_logic_vector (31 downto 0);  			-- data in for instruction memory which represents the instruction itself 
@@ -182,11 +182,11 @@ f   :forwardUnit          port map(op1,op2,rdst,regDestOut,aluOp,wb_cs,WB_CSOut,
 
 hzrd:hazardDetection      port map(inst(23 downto 21),inst(26 downto 24),op2,memread,sig);
 
-ftch:FetchStage           port map(en,clk,sig,sig,isJMP,jmpLocation ,PCfMEM,Reset,popExcept,retout,intout,rtiout,JMPF_Flush,intout,ret,Reset,flushPOP,flushInvalid, rst,Address,instMemData,PCOut1,InstrucionOut);
+ftch:FetchStage           port map(en,clk,sig,sig,isJMP,jmpLocation ,PCfMEM,Reset,popExcept,retout,intout,rtiout,JMPF_Flush,flushPOP,flushInvalid, rst,Address,instMemData,PCOut1,InstrucionOut);
 
 jmp0:jmpDetection          port map(jmp,ccr(0),ccr(2),ccr(1),r1_out,JMPF_Flush,JMPD_Flush,isJMP,jmpLocation );
 
-dec :decode               port map(clk,rstm,PCOut1,InstrucionOut,wr,WB_stage,result,wb,regDest,jmp,outPortflag,AluSrc,aluOp,memWrite,memRead,pop,push,ret,int,instSize,call,RTI,imm,index,op1,op2,op3,pcout,r1,r2);
+dec :decode               port map(clk,rst(0),PCOut1,InstrucionOut,wr,WB_stage,result,wb,regDest,jmp,outPortflag,AluSrc,aluOp,memWrite,memRead,pop,push,ret,int,instSize,call,RTI,imm,index,op1,op2,op3,pcout,r1,r2);
 					   -- Changed the PC and Instruction to the output from the Fetch Stage
 
 
@@ -201,9 +201,9 @@ mem :memStage             port map(rdst,ccr,clk,memReadout,memWriteout,en(0),rst
 
 wrb :writeBack            port map(clk,WB_CSOut,MemOut,ALUOut,inPortout,regDestOut,result,WR,WB_stage);
 
-pop0 :popException         port map(SPstatus,pop,flushPOP,popExcept,PopExcAdd,PC,instSize,EPC);
+pop0 :popException         port map(SPstatus,pop_out,flushPOP,popExcept,PopExcAdd,pcout_out,instSize,EPC);
 
-invalidAdd:invalidAddress port map(e,flushInvalid,PC,EPC,PCExcAdd);
+invalidAdd:invalidAddress port map(e,flushInvalid,pcout_out,EPC,PCExcAdd);
 
 
 end architecture;
