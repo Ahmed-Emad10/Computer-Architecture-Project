@@ -5,9 +5,9 @@ entity FetchStage is
 port(
     en  : in std_logic_vector(2 downto 0);        		-- en(2)-->for pc, en(1)-->for instruction memory, en(0)-->for fetch buffer
     clk,IF_IDWrite,PCWrite,isJMP : in std_logic;        -- new signals IF_IDWrite for stall also PCWrite , isJMP indicates if there is jmp
-	JMPLocation : in std_logic_vector (15 downto 0);    -- new signals represents the jmp location
-	MemOut : in std_logic_vector (31 downto 0);         -- new signals represent the pc of the int or the exceptions
-	Reset,PopEx,MemRet,MemInt,MemRti : in std_logic;    -- new signals to choosde the pc in case of we want the pc from the data Mem
+    JMPLocation : in std_logic_vector (15 downto 0);    -- new signals represents the jmp location
+    MemOut : in std_logic_vector (31 downto 0);         -- new signals represent the pc of the int or the exceptions
+    Reset,PopEx,MemRet,MemInt,MemRti : in std_logic;    -- new signals to choosde the pc in case of we want the pc from the data Mem
     JMP_Flush,INT_Flush,RET_Flush,Reset_Flush,Pop_Flush,PC_Flush : in std_logic;  -- new signals to flush the Fetch Buffer
     rst : in std_logic_vector(2 downto 0); 						-- rst(2)-->for pc, rst(1)-->for instruction memory, rst(0)-->for fetch buffer
     Address : in std_logic_vector (31 downto 0); 				-- to choose the location to store the instruction in the instruction memory
