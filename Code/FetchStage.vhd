@@ -8,7 +8,7 @@ port(
 	JMPLocation : in std_logic_vector (15 downto 0);    -- new signals represents the jmp location
 	MemOut : in std_logic_vector (31 downto 0);         -- new signals represent the pc of the int or the exceptions
 	Reset,PopEx,MemRet,MemInt,MemRti : in std_logic;    -- new signals to choosde the pc in case of we want the pc from the data Mem
-    IF_Flush,JMP_Flush,INT_Flush,RET_Flush,Reset_Flush,Pop_Flush : in std_logic;  -- new signals to flush the Fetch Buffer
+    JMP_Flush,INT_Flush,RET_Flush,Reset_Flush,Pop_Flush,PC_Flush : in std_logic;  -- new signals to flush the Fetch Buffer
     rst : in std_logic_vector(2 downto 0); 						-- rst(2)-->for pc, rst(1)-->for instruction memory, rst(0)-->for fetch buffer
     Address : in std_logic_vector (31 downto 0); 				-- to choose the location to store the instruction in the instruction memory
     instMemData : in std_logic_vector (31 downto 0);  			-- data in for instruction memory which represents the instruction itself 
@@ -100,7 +100,7 @@ begin
 		else   '0';
 	Mux4: mux2x1 port map(PC2,MemOut,isMemPc,new_pc);
 
-	isFlush	<= '1' when IF_Flush = '1'
+	isFlush	<= '1' when PC_Flush = '1'
 	else '1' when JMP_Flush = '1'
 	else '1' when INT_Flush = '1'
 	else '1' when RET_Flush = '1'

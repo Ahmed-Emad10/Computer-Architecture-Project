@@ -5,6 +5,7 @@ use IEEE.std_logic_signed.all;
 entity alu is
   GENERIC(n : integer :=16);
      port(
+    rst:in std_logic;
     op:in std_logic_vector(4 downto 0);
     r1:in std_logic_vector(n-1 downto 0);
     r2:in std_logic_vector(n-1 downto 0);
@@ -57,13 +58,14 @@ ccr(2)<=c3 when op="00010"
 else c5 when op="00100"
 else c8 when (op="01001" or op="01100")
 else c9 when op="01010"
+else '0' when  rst='1' 
 else ccr(2);
 res<=result;
-ccr(0)<='1' when (result=zero and  op(4)='0' and not(op="00110") and not(op="00101"))
-else '0' when (not(result=zero) and  op(4)='0' and not(op="00110") and not(op="00101"))
+ccr(0)<='1' when (result=zero and  rst='0' and op(4)='0' and not(op="00110") and not(op="00101"))
+else '0' when (not(result=zero) and op(4)='0' and not(op="00110") and not(op="00101")) or (rst='1') 
 else ccr(0);
 ccr(1)<='1' when (result(15)='1' and  op(4)='0' and not(op="00110") and not(op="00101"))
-else '0' when (not(result(15)='1') and  op(4)='0' and not(op="00110") and not(op="00101"))
+else '0' when (not(result(15)='1') and  op(4)='0' and not(op="00110") and not(op="00101")) or (rst='1') 
 else ccr(1);
 e<='1' when (op="10011" or op="10100") and result>"1111111100000000" else '0';
 end architecture;

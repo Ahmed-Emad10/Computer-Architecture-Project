@@ -9,10 +9,11 @@ port(rst: in std_logic;
 	wb: out std_logic_vector(1 downto 0); --ORed and to register file as wb
 	--ex
 	regDes: out std_logic_vector(1 downto 0);
-	jmp,outPort,AluSrc: out std_logic;
+	jmp: out std_logic_vector(2 downto 0);
+	outPort,AluSrc: out std_logic;
 	aluOp: out std_logic_vector(4 downto 0);--not sure yet...
 	--mem
-	memWrite,memRead,pop,push,ret,int,instSize: out std_logic 
+	memWrite,memRead,pop,push,ret,int,instSize,call,RTI: out std_logic
 	);
 end entity;
 
@@ -22,7 +23,7 @@ process(clk,rst)
 begin
 if rst = '1' then
 	wb <= (others=>'0');
-	jmp <= '0';
+	jmp <= "000";
 	outPort <= '0';
 	aluSrc <= '0';
 	regDes <= (others=>'0');
@@ -45,10 +46,16 @@ elsif rising_edge(clk) then
 	else
 		wb <= "00"; --no wb (or them into regfile)
 	end if;
-	if(opcode(4 downto 3)="11" and opcode(2 downto 0)<="100") then -- or 011 if call is not jmp
-		jmp <= '1';
+	if(opcode(4 downto 3)="11" and opcode(2 downto 0)="011") then -- unconditional jump     -- or 011 if call is not jmp
+		jmp <= "001";
+	elsif(opcode(4 downto 3)="11" and opcode(2 downto 0)="010") then  -- carry flag
+		jmp <= "010";
+	elsif(opcode(4 downto 3)="11" and opcode(2 downto 0)="001") then  -- negative flag
+		jmp <= "011";
+	elsif(opcode(4 downto 3)="11" and opcode(2 downto 0)="000") then  -- zero flag
+		jmp <= "100";
 	else
-		jmp <= '0';
+		jmp <= "000";
 	end if;
 	if(opcode="00101") then
 		outPort <= '1';
@@ -102,7 +109,16 @@ elsif rising_edge(clk) then
 	else
 		instSize <= '0';
 	end if;
-	
+	if(opcode = "11111") then
+		RTI <= '1';
+	else
+		RTI <= '0';
+	end if;
+	if(opcode = "11100") then
+		call <= '1';
+	else
+		call <= '0';
+	end if;
 end if;
 end process;
 end architecture;

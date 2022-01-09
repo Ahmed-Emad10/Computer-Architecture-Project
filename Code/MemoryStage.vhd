@@ -48,7 +48,7 @@ end component;
 		out1    : OUT std_logic_vector (n-1 DOWNTO 0));
 END component;
 SIGNAl ReadData,PCandFlags,New_PC : std_logic_vector(31 downto 0);
-Signal CallorINT : std_logic ;
+Signal CallorINT,ThTwSixTeen1 : std_logic ;
 Signal firstBits,Mux1_Out,Mux2_Out,Mux3_Out,Mux4_Out : std_logic_vector (15 downto 0);  -- these muxes to choose the right address
 Signal Mux5_Out,Mux6_Out,WD : std_logic_vector (31 downto 0);
 
@@ -69,8 +69,11 @@ begin
 	WD(15 downto 0) <= writeData;
 	Mux5: mux2x1 port map(WD,PCandFlags,CallorINT,Mux5_Out);
 	Mux6: mux2x1 port map(Mux5_Out,memPC,Start,Mux6_Out);
-
-	DM: DataMemory port map(clk,memRead,memWrite,Push,Pop,ThTwSixTeen,Mux4_Out,Mux6_Out,SPstatus,ReadData);
+	
+	
+	ThTwSixTeen1 <= '1' when Start='1'
+	else ThTwSixTeen;
+	DM: DataMemory port map(clk,memRead,memWrite,Push,Pop,ThTwSixTeen1,Mux4_Out,Mux6_Out,SPstatus,ReadData);
      PCfMEM <= ReadData;
 	firstBits <= ReadData(15 downto 0);
 	mBuffer: MemBuffer port map(en,clk,rst,firstBits,Address,inPort,WB_CS,regDest,MemOut,ALUOut,inPortOut,WB_CSOut,regDestOut);

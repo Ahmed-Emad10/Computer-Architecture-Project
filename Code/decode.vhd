@@ -9,14 +9,15 @@ port(clk,rst: in std_logic;
 	wd: in std_logic_vector(15 downto 0);
 	wb: out std_logic_vector(1 downto 0); 
 	regDes: out std_logic_vector(1 downto 0);
-	jmp,outPort,AluSrc: out std_logic;
+	jmp: out std_logic_vector(2 downto 0);
+	outPort,AluSrc: out std_logic;
 	aluOp: out std_logic_vector(4 downto 0);
-	memWrite,memRead,pop,push,ret,int,instSize: out std_logic;
+	memWrite,memRead,pop,push,ret,int,instSize,call,RTI: out std_logic;
 	imm: out std_logic_vector(15 downto 0);
 	index: out std_logic_vector(1 downto 0); --why is it 2 bits not just 1?
 	operand1,operand2,operand3: out std_logic_vector(2 downto 0);
 	pcout: out std_logic_vector(31 downto 0);
-	RD1,RD2: out std_logic_vector(15 downto 0) 
+	RD1,RD2: out std_logic_vector(15 downto 0)
 );
 end entity;
 
@@ -27,9 +28,10 @@ port(rst: in std_logic;
 	opcode: in std_logic_vector(4 downto 0);
 	wb: out std_logic_vector(1 downto 0); 
 	regDes: out std_logic_vector(1 downto 0);
-	jmp,outPort,AluSrc: out std_logic;
+	jmp: out std_logic_vector(2 downto 0);
+	outPort,AluSrc: out std_logic;
 	aluOp: out std_logic_vector(4 downto 0);
-	memWrite,memRead,pop,push,ret,int,instSize: out std_logic
+	memWrite,memRead,pop,push,ret,int,instSize,call,RTI: out std_logic
 	);
 end component;
 component regFile is
@@ -43,7 +45,7 @@ signal wbReg: std_logic;
 signal temp: std_logic_vector(1 downto 0);
 begin
 pcout <= pcin;
-cu1: contUnit port map(rst,clk,inst(31 downto 27),temp,regDes,jmp,outPort,alusrc,aluop,memwrite,memread,pop,push,ret,int,instsize);
+cu1: contUnit port map(rst,clk,inst(31 downto 27),temp,regDes,jmp,outPort,alusrc,aluop,memwrite,memread,pop,push,ret,int,instsize,call,RTI);
 wbreg <= temp(0) or temp(1);
 wb<=temp;
 rf1: regFile port map(wbreg,clk,rst,inst(26 downto 24),inst(23 downto 21),wr,wd,rd1,rd2);
