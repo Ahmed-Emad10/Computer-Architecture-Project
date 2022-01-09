@@ -35,13 +35,15 @@ if rst = '1' then
 	ret <= '0';
 	int <= '0';
 	instSize <= '0';
+	call <= '0';
+	RTI <= '0';
 elsif rising_edge(clk) then
 	aluOp <= opcode;
 	if(opcode="10001" or opcode ="10011") then  --memory
 		wb <= "01";
 	elsif(opcode = "00110" ) then --in port
 		wb <= "11";
-	elsif((opcode(4 downto 3)="01" and opcode(2 downto 0)<="100") or opcode= "00011" or opcode="00100" or opcode= "10010" or opcode<"00101") then --alu
+	elsif((opcode(4 downto 3)="01" and opcode(2 downto 0)<="100") or opcode= "00011" or opcode="00100" or opcode= "10010") then --alu
 		wb <= "10";
 	else
 		wb <= "00"; --no wb (or them into regfile)
