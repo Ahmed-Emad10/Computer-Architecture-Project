@@ -2,9 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 entity exStage is
-   port(
+     port(
     clk,rst:in std_logic;
-    jmpFlag,outportFlag,aluSrc,exInt,popin,pushin,callin,intin:in std_logic;
+    outportFlag,aluSrc,popin,pushin,callin,intin,retin,rtiin:in std_logic;
     op:in std_logic_vector(4 downto 0);
     imm,sr1,sr2,aluo,memout,inport:in std_logic_vector(15 downto 0);
     pc:in std_logic_vector(31 downto 0);
@@ -14,17 +14,18 @@ entity exStage is
     ccr:inout std_logic_vector(2 downto 0);
     epc:out std_logic_vector(31 downto 0);
     alures:out std_logic_vector(15 downto 0);
-    pushRsrc:out std_logic_vector(15 downto 0);
+    pushRsrc,inportout:out std_logic_vector(15 downto 0);
     rdst:out std_logic_vector(2 downto 0);
     WBout:out std_logic_vector(1 downto 0);
-    memWriteout,memReadout,popout,pushout,callout,intout:out std_logic;
+    memWriteout,memReadout,popout,pushout,callout,intout,retout,rtiout:out std_logic;
     e:out std_logic
      );
 end entity;
 architecture exStage of exStage is
 component alu is
    GENERIC(n : integer :=16);
-     port(
+      port(
+    rst:in std_logic;
     op:in std_logic_vector(4 downto 0);
     r1:in std_logic_vector(n-1 downto 0);
     r2:in std_logic_vector(n-1 downto 0);
@@ -75,6 +76,9 @@ begin
      pushout<=pushin;
      callout<=callin;
      intout<=intin;
+     retout<=retin;
+     rtiout<=rtiin;
+inportout<=inport;
  end if;
  end process;
 epc0: reg generic map(32)port map('1',clk,rst,pc0,epc);
@@ -84,5 +88,5 @@ src1<=s;
 m1:mux port map(r2,aluout,memout,inport,reg2,s2); 
 src2<=s2 when alusrc='0' else imm;
 pushrSrc<=src1 when pushin='1' else src2;
-alu0:alu port map(aluop,src1,src2,alures,ccr,e);
+alu0:alu port map(rst,aluop,src1,src2,alures,ccr,e);
 end architecture;
