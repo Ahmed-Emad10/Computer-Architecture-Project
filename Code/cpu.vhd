@@ -120,12 +120,11 @@ port(SPstatus: in std_logic_vector(1 downto 0); --00 empty , 01 last position , 
 	);
 end component;
 component invalidAddress is
-port(invalidAdd: in std_logic;   --1 if invalid address
+port(invalidAdd: inout std_logic;   --1 if invalid address
 	flush: out std_logic;  -- 1 to flush
 	PC: in std_logic_vector(31 downto 0);
 	EPC: inout std_logic_vector(31 downto 0);
-	exceptAddress: out std_logic_vector(15 downto 0); -- always 4 ??
-	invalidSig: out std_logic   --1 also 1 if invalid ???
+	exceptAddress: out std_logic_vector(15 downto 0) -- always 4 ??
 );
 end component;
 component jmpDetection is
@@ -170,8 +169,8 @@ end component;
 
 signal outPortflag_out,outPortflag,AluSrc,AluSrc_out,memWrite,memWrite_out,memRead,memRead_out,pop,pop_out,push_out,push,ret,ret_out,int,int_out,instSize_out,instSize,en1,rst1,rstm,rstex,sig,isJMP,memReadOut,memWriteout,callout,intout,flushPOP,flushInvalid,call,RTI: std_logic;
 signal POP_flushEX_MEM,POP_flushID_EX,POP_flushIF_ID,INVALID_flushEX_MEM,INVALID_flushID_EX,INVALID_flushIF_ID,popExcept,JMPF_Flush,JMPD_Flush,invalidSig,popout,pushout,retout,rtiout,rti_out,call_out,e: std_logic;
-signal wb,wb_out,inportSignal,regDest,index,index_out,WB_CS,WB_CSout,reg1,reg2,SPstatus: std_logic_vector(1 downto 0); 
-signal wr,op1,op2,op3,op1_out,op2_out,op3_out,ccr ,rdst, jmp,jmp_out,regDestOut, regDes_out,regDest_out : std_logic_vector(2 downto 0);
+signal wb,wb_out,inportSignal,regDest,index,index_out,WB_CS,WB_CSout,reg1,reg2,SPstatus,regDes_out: std_logic_vector(1 downto 0); 
+signal wr,op1,op2,op3,op1_out,op2_out,op3_out,ccr ,rdst, jmp,jmp_out,regDestOut, regDest_out : std_logic_vector(2 downto 0);
 signal aluOp,aluOp_out: std_logic_vector(4 downto 0);
 signal imm,imm_out,r1,r2,r1_out,r2_out,result,alures,memout,aluout,inportout,PopExcAdd,PCExcAdd,jmpLocation,inportoutEX,pushRsrc:std_logic_vector(15 downto 0);
 signal pc,pcout,pcout_out,inst,epc,InstrucionOut,PCfMEM: std_logic_vector (31 downto 0);
@@ -193,17 +192,16 @@ decodeBuffer: id_ex       port map(JMPD_Flush,clk,wb,regDest,jmp,outPortflag,Alu
 
 
 
-ex  :exStage              port map(clk,reset,outportflag_out,aluSrc_out,pop_out,push_out,call_out,int_out,ret_out,rti_out,aluOp_out,pcout_out,imm_out,r1_out,r2_out,aluout,memout,inport,op1_out,op2_out,op3_out,reg1,reg2,regDest_out,wb,memWrite_out,memRead_out,ccr,epc,alures,pushRsrc,inportoutEX,rdst,WB_CS,memWriteout,memReadout,popout,pushout,callout,intout,retout,rtiout,e);
-					-- memReadOut ,memWriteOut , callout,intout
+ex  :exStage              port map(clk,reset,outportflag_out,aluSrc_out,pop_out,push_out,call_out,int_out,ret_out,rti_out,aluOp_out,imm_out,r1_out,r2_out,aluout,memout,inport,pcout_out,op1_out,op2_out,op3_out,reg1,reg2,regDes_out,wb,memWrite_out,memRead_out,ccr,epc,alures,pushRsrc,inportoutEX,rdst,WB_CS,memWriteout,memReadout,popout,pushout,callout,intout,retout,rtiout,e);					-- memReadOut ,memWriteOut , callout,intout
 outport<=alures when outportflag='1';
 
-mem :memStage             port map(regDest_out,ccr,clk,memReadout,memWriteout,en(0),rst(0),popout,pushout,instSize,callout,intout,WB_CS,epc,memPC,alures,inportoutEX,PopExcAdd,PCExcAdd,startAdd,pushRsrc,popExcept,invalidSig,start,Reset,regDestOut,WB_CSOut,SPstatus,inPortout,MemOut,ALUOut,PCfMEM);
+mem :memStage             port map(rdst,ccr,clk,memReadout,memWriteout,en(0),rst(0),popout,pushout,instSize,callout,intout,WB_CS,epc,memPC,alures,inportoutEX,PopExcAdd,PCExcAdd,startAdd,pushRsrc,popExcept,flushInvalid,start,Reset,regDestOut,WB_CSOut,SPstatus,inPortout,MemOut,ALUOut,PCfMEM);
 
 wrb :writeBack            port map(clk,WB_CSOut,MemOut,ALUOut,inPortout,regDestOut,result,WR);
 
 pop0 :popException         port map(SPstatus,pop,flushPOP,popExcept,PopExcAdd,PC,instSize,EPC);
 
-invalidAdd:invalidAddress port map(e,flushInvalid,PC,EPC,PCExcAdd,invalidSig);
+invalidAdd:invalidAddress port map(e,flushInvalid,PC,EPC,PCExcAdd);
 
 
 end architecture;

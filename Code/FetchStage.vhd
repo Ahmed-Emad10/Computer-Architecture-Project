@@ -44,9 +44,10 @@ END component;
 
 component FetchBuffer is
 port(
-     en,clk,rst,isFlush,isStall:in std_logic;
-     Instruction,PC:in std_logic_vector (31 downto 0);
-     InstOut,PCOut: out std_logic_vector (31 downto 0) );
+     en,clk,rst,flush,stall:in std_logic;
+     Instruction,PC:in std_logic_vector (31 downto 0);   --into the buffer
+     InstOut,PCOut: out std_logic_vector (31 downto 0)   -- out from the buffer
+     );
 end component;
 
 component instructionsize IS
