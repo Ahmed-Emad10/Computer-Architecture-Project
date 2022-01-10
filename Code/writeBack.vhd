@@ -10,32 +10,26 @@ wb: in std_logic_vector(1 downto 0);
 	inport: in std_logic_vector(15 downto 0);
 	regdes: in std_logic_vector(2 downto 0);
 	aluout: out std_logic_vector(15 downto 0);
-	WR: out std_logic_vector(2 downto 0)
+	WR: out std_logic_vector(2 downto 0);
+	WB1 : out std_logic_vector(1 downto 0)
 );
 end entity;
 
 architecture writeback of writeback is
-  signal m,a,inp:std_logic_vector(15 downto 0); 
-  signal w:std_logic_vector(1 downto 0);
-  signal rd:std_logic_vector(2 downto 0);
+
 begin
   process(clk)
     begin
-        if(rising_edge(clk)) then
-  m<=mem;
-  a<=alu;
-  inp<=inport;
-  w<=wb;
-  rd<=regdes;
-end if;
-    if(falling_edge(clk)) then
-    --case (w) is
--- when "01"=>aluout <= m;
--- when "10"=>aluout <= a;
--- when others=>aluout <= inp;
-aluout<=a;
- -- end case;
-wr <= rd;
-end if;
-end process;
+
+    if(rising_edge(clk)) then
+    case (wb) is
+	when "01"=>aluout <= mem;
+ 	when "10"=>aluout <= alu;
+	when others=>aluout <= inport;
+
+    end case;
+	WR <= regdes;
+	WB1 <= wb;
+    end if;
+  end process;
 end architecture;

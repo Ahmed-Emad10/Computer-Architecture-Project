@@ -19,25 +19,25 @@ BEGIN
 	  else "00" when opcode="00101"
 	  else "00" when opcode="00110"        -- end of one operand
 
-	  else "00" when opcode="00111"        -- start of two operands  add two
-	  else "00" when opcode="01000"
+	  else "00" when opcode="01000"        -- start of two operands  add two
 	  else "00" when opcode="01001"
 	  else "00" when opcode="01010"
-	  else "01" when opcode="01011"        -- end of two operands   ADDI Rdst,Rsrc,Imm
+	  else "00" when opcode="01011"
+	  else "01" when opcode="01100"        -- end of two operands   ADDI Rdst,Rsrc,Imm
 
-	  else "00" when opcode="01100"        -- start of MEM operations
-	  else "00" when opcode="01101"
-	  else "01" when opcode="01110"        	   -- ldm rdst,imm
-	  else "01" when opcode="01111"
-	  else "01" when opcode="10000"        -- end of MEM operations
+	  else "00" when opcode="10000"        -- start of MEM operations
+	  else "00" when opcode="10001"
+	  else "01" when opcode="10010"        	   -- ldm rdst,imm
+	  else "01" when opcode="10011"
+	  else "01" when opcode="10100"        -- end of MEM operations
 
-	  else "00" when opcode="10001"        -- start of Branch operations
-	  else "00" when opcode="10010"
-	  else "00" when opcode="10011"
-	  else "00" when opcode="10100"
-	  else "00" when opcode="10101"
-	  else "00" when opcode="10110"
-	  else "00" when opcode="10111"
-	  else "00" when opcode="11000";      -- end of Branch operations
+	  else "00" when opcode="11000"        -- start of Branch operations
+	  else "00" when opcode="11001"
+	  else "00" when opcode="11010"
+	  else "00" when opcode="11011"
+	  else "00" when opcode="11100"
+	  else "00" when opcode="11101"
+	  else "00" when opcode="11110"
+	  else "00" when opcode="11111";      -- end of Branch operations
 
 END instructionsize1;

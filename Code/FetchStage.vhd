@@ -5,10 +5,10 @@ entity FetchStage is
 port(
     en  : in std_logic_vector(2 downto 0);        		-- en(2)-->for pc, en(1)-->for instruction memory, en(0)-->for fetch buffer
     clk,IF_IDWrite,PCWrite,isJMP : in std_logic;        -- new signals IF_IDWrite for stall also PCWrite , isJMP indicates if there is jmp
-	JMPLocation : in std_logic_vector (15 downto 0);    -- new signals represents the jmp location
-	MemOut : in std_logic_vector (31 downto 0);         -- new signals represent the pc of the int or the exceptions
-	Reset,PopEx,MemRet,MemInt,MemRti : in std_logic;    -- new signals to choosde the pc in case of we want the pc from the data Mem
-    JMP_Flush,INT_Flush,RET_Flush,Reset_Flush,Pop_Flush,PC_Flush : in std_logic;  -- new signals to flush the Fetch Buffer
+    JMPLocation : in std_logic_vector (15 downto 0);    -- new signals represents the jmp location
+    MemOut : in std_logic_vector (31 downto 0);         -- new signals represent the pc of the int or the exceptions
+    Reset,PopEx,MemRet,MemInt,MemRti : in std_logic;    -- new signals to choosde the pc in case of we want the pc from the data Mem
+    JMP_Flush,Pop_Flush,PC_Flush : in std_logic;  -- new signals to flush the Fetch Buffer
     rst : in std_logic_vector(2 downto 0); 						-- rst(2)-->for pc, rst(1)-->for instruction memory, rst(0)-->for fetch buffer
     Address : in std_logic_vector (31 downto 0); 				-- to choose the location to store the instruction in the instruction memory
     instMemData : in std_logic_vector (31 downto 0);  			-- data in for instruction memory which represents the instruction itself 
@@ -44,9 +44,10 @@ END component;
 
 component FetchBuffer is
 port(
-     en,clk,rst,isFlush,isStall:in std_logic;
-     Instruction,PC:in std_logic_vector (31 downto 0);
-     InstOut,PCOut: out std_logic_vector (31 downto 0) );
+     en,clk,rst,flush,stall:in std_logic;
+     Instruction,PC:in std_logic_vector (31 downto 0);   --into the buffer
+     InstOut,PCOut: out std_logic_vector (31 downto 0)   -- out from the buffer
+     );
 end component;
 
 component instructionsize IS
@@ -71,7 +72,7 @@ END component;
 SIGNAL pc_out,inst_out,faddress,sum1,sum2,add1,add2 : std_logic_vector(31 downto 0);  --address signal the chosen address between PC(pc_out) and Address(to store instructions in instruction memory)
 SIGNAL RdstExtended : std_logic_vector (31 downto 0);    -- to extend the jmp location from 16-bit to 32-bit so we can use it as PC
 SIGNAL PC1,PC2,new_pc : std_logic_vector (31 downto 0);  -- PC1 output of first mux , PC2 output of the second mux ,new_pc output of the third mux
-SIGNAL cout1,cout2,isFlush,isMemPc : std_logic;
+SIGNAL cout1,cout2,isFlush,isMemPc,is_jMp : std_logic;
 SIGNAL inst_size : std_logic_vector(1 downto 0); 
 begin
 
@@ -89,23 +90,16 @@ begin
 															-- choosing  which instruction to be executed (if en(1) is equal to zero we take PC as address)
 	
 	Mux2: mux port map(sum1,sum2,pc_out,(Others => '0'),inst_size,PC1);       --to choose what to add to the PC 1 or 2 or same pc in case of hlt
-	RdstExtended <= (others => '0');
-	RdstExtended(15 downto 0) <= JMPLocation;
-	Mux3: mux2x1 port map(PC1,RdstExtended,isJMP,PC2);
-	isMemPc <= '1' when Reset  = '1'
-		else   '1' when PopEx  = '1'
-		else   '1' when MemRet = '1' 
-		else   '1' when MemInt = '1'
-		else   '1' when MemRti = '1'
+	RdstExtended(31 downto 16) <= "0000000000000000";
+	RdstExtended(15 downto 0) <= JMPLocation when isJMP='1';
+	is_jMp <= '1' when isJMP ='1' 
+	else '0';
+	Mux3: mux2x1 port map(PC1,RdstExtended,is_jMp,PC2);
+	isMemPc <= '1' when Reset  = '1' or PopEx ='1' or MemRet ='1' or MemInt ='1' or MemRti='1' or PC_Flush='1'
 		else   '0';
 	Mux4: mux2x1 port map(PC2,MemOut,isMemPc,new_pc);
 
-	isFlush	<= '1' when PC_Flush = '1'
-	else '1' when JMP_Flush = '1'
-	else '1' when INT_Flush = '1'
-	else '1' when RET_Flush = '1'
-	else '1' when Reset_Flush = '1'
-	else '1' when Pop_Flush = '1'
+	isFlush	<= '1' when PC_Flush = '1' or JMP_Flush = '1' or MemInt= '1' or MemRet = '1' or Reset = '1' or Pop_Flush = '1' or MemRti ='1'
 	else '0';
 	fBuffer: FetchBuffer port map(en(0),clk,rst(0),isFlush,IF_IDWrite,inst_out,pc_out,InstrucionOut,PCOut);
 

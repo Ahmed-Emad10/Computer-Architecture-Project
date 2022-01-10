@@ -23,10 +23,12 @@ BEGIN
   IS1:instructionsize port map(datain(31 downto 27),size1); 
 
 PROCESS(clk) IS 
+--Variable  : std_logic_vector(31 downto 0) :="00000000000011111111111111111111"; 
   BEGIN
  	IF rising_edge(clk) THEN 
  		IF we = '1' and (size1="00" or size1="10") THEN 
 			ram(to_integer(unsigned((address)))) <= datain(31 downto 16); 
+			ram(to_integer(unsigned((address)))+1) <= (others=>'0');
 		ELSIF we = '1' and size1="01" THEN 
 			ram(to_integer(unsigned((address)))) <= datain(31 downto 16); 
 			ram(to_integer(unsigned((address)))+1) <= datain(15 downto 0); 

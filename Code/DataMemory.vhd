@@ -3,7 +3,7 @@ USE ieee.STD_LOGIC_1164.ALL;
 USE ieee.numeric_std.all;
 ENTITY DataMemory IS
 PORT (clk     : IN std_logic;
-      memRead,memWrite,Pop,Push,ThTwSixTeen  : IN std_logic;    -- Read for load(get data from memory) , Write for store(insert data in memory)
+      memRead1,memWrite1,Pop,Push,ThTwSixTeen  : IN std_logic;    -- Read for load(get data from memory) , Write for store(insert data in memory)
                                                                 -- ThirtyTwo/Sixteen signal to decide how many locations in the memory should the data take
                                                                 -- 0 means 16-bit 1 means 32-bit  
       address : IN std_logic_vector(15 DOWNTO 0);
@@ -23,10 +23,10 @@ PROCESS(clk) IS
   BEGIN
   IF falling_edge(clk) THEN 
 
-    IF memWrite = '1' and ThTwSixTeen = '0' and Push = '0'  THEN 
+    IF memWrite1 = '1' and ThTwSixTeen = '0' and Push = '0'  THEN 
        ram(to_integer(unsigned((address)))) <= writeData(15 downto 0);  
     END IF;
-    IF memWrite = '1' and ThTwSixTeen = '1' and Push = '0' THEN 
+    IF memWrite1 = '1' and ThTwSixTeen = '1' and Push = '0' THEN 
       ram(to_integer(unsigned((address)))) <= writeData(15 downto 0); 
       ram(to_integer(unsigned((address)))+1) <= writeData(31 downto 16);  
     END IF;
@@ -52,10 +52,10 @@ PROCESS(clk) IS
      SP:= std_logic_vector(to_unsigned((to_integer(unsigned(SP))+1),32));
     END IF;
 
-    IF memRead ='1' and ThTwSixTeen = '0' and Pop= '0' THEN 
+    IF memRead1 ='1' and ThTwSixTeen = '0' and Pop= '0' THEN 
       readData <= "0000000000000000"&ram(to_integer(unsigned((address))));
     END IF;
-    IF memRead ='1' and ThTwSixTeen = '1' and Pop= '0' THEN 
+    IF memRead1 ='1' and ThTwSixTeen = '1' and Pop= '0' THEN 
       readData <= ram(to_integer(unsigned((address)))+1)&ram(to_integer(unsigned((address)))) ;
     END IF;
 

@@ -21,7 +21,7 @@ architecture myMemStage of MemStage is
 
 component DataMemory is
 PORT (clk     : IN std_logic;
-      memRead,memWrite,Pop,Push,ThTwSixTeen  : IN std_logic;    -- Read for load(get data from memory) , Write for store(insert data in memory)
+      memRead1,memWrite1,Pop,Push,ThTwSixTeen  : IN std_logic;    -- Read for load(get data from memory) , Write for store(insert data in memory)
                                                                 -- ThirtyTwo/Sixteen signal to decide how many locations in the memory should the data take
                                                                 -- 0 means 16-bit 1 means 32-bit 
       address : IN std_logic_vector(15 DOWNTO 0);
@@ -48,7 +48,7 @@ end component;
 		out1    : OUT std_logic_vector (n-1 DOWNTO 0));
 END component;
 SIGNAl ReadData,PCandFlags,New_PC : std_logic_vector(31 downto 0);
-Signal CallorINT,ThTwSixTeen1 : std_logic ;
+Signal CallorINT,ThTwSixTeen1,mem_read,mem_write : std_logic ;
 Signal firstBits,Mux1_Out,Mux2_Out,Mux3_Out,Mux4_Out : std_logic_vector (15 downto 0);  -- these muxes to choose the right address
 Signal Mux5_Out,Mux6_Out,WD : std_logic_vector (31 downto 0);
 
@@ -59,7 +59,7 @@ begin
 	Mux4: mux2x1 generic map (16)  port map(Mux3_Out,startAdd,Start,Mux4_Out);
 	
 	New_PC <= std_logic_vector(to_unsigned((to_integer(unsigned(PC))+1),32));
-	PCandFlags <= New_PC;
+	PCandFlags(28 downto 0) <= New_PC(28 downto 0);
 	PCandFlags(31 downto 29) <= Flags;
 	
 	CallorINT <= '1' when call ='1'
@@ -73,8 +73,12 @@ begin
 	
 	ThTwSixTeen1 <= '1' when Start='1'
 	else ThTwSixTeen;
-	DM: DataMemory port map(clk,memRead,memWrite,Push,Pop,ThTwSixTeen1,Mux4_Out,Mux6_Out,SPstatus,ReadData);
-     PCfMEM <= ReadData;
+	mem_read <= '1' when memRead='1' or PopExc='1' or PCExc='1'
+	else '0';
+	mem_write <= '1' when memWrite='1' or start='1'
+	else '0';
+	DM: DataMemory port map(clk,mem_read,mem_write,pop,push,ThTwSixTeen1,Mux4_Out,Mux6_Out,SPstatus,ReadData);
+        PCfMEM <= ReadData;
 	firstBits <= ReadData(15 downto 0);
 	mBuffer: MemBuffer port map(en,clk,rst,firstBits,Address,inPort,WB_CS,regDest,MemOut,ALUOut,inPortOut,WB_CSOut,regDestOut);
 
